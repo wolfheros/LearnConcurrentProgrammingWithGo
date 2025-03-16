@@ -10,7 +10,7 @@ import (
 
 const allLetters = "abcdefghijklmnopqrstuvwxyz"
 
-func main() {
+func main23() {
 	var frequency = make([]int, 26)
 	for i := 1000; i <= 1030; i++ {
 		url := fmt.Sprintf("https://rfc-editor.org/rfc/rfc%d.txt", i)
