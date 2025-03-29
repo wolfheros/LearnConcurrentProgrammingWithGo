@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	mutex := sync.Mutex{}
+	mutex := sync.RWMutex{}
 	var matchEvents = make([]string, 0, 10000)
 	for j := 0; j < 10000; j++ {
 		matchEvents = append(matchEvents, "Match event")
@@ -21,21 +21,21 @@ func main() {
 	time.Sleep(100 * time.Second)
 }
 
-func matchRecorder(matchEvents *[]string, mutex *sync.Mutex) {
+func matchRecorder(matchEvents *[]string, mutex *sync.RWMutex) {
 	for i := 0; ; i++ {
 		mutex.Lock()
-		*matchEvents = append(*matchEvents, "Match event"+strconv.Itoa(i))
+		*matchEvents = append(*matchEvents, "Match event "+strconv.Itoa(i))
 		mutex.Unlock()
 		time.Sleep(200 * time.Millisecond)
 		fmt.Println("Append match event")
 	}
 }
 
-func clientHandler(mEvents *[]string, mutex *sync.Mutex, st time.Time) {
+func clientHandler(mEvents *[]string, mutex *sync.RWMutex, st time.Time) {
 	for i := 0; i < 100; i++ {
-		mutex.Lock()
+		mutex.RLock()
 		allEvents := copyAllEvents(mEvents)
-		mutex.Unlock()
+		mutex.RUnlock()
 
 		timeTaken := time.Since(st)
 		fmt.Println(len(allEvents), "events copied in", timeTaken)
