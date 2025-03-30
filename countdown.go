@@ -31,8 +31,9 @@ func countLetters(url string, frequency []int, mutex *sync.Mutex) {
 	if resp.StatusCode != 200 {
 		panic("Server returnning error status code" + resp.Status)
 	}
-
 	body, _ := io.ReadAll(resp.Body)
+
+	// Only put Mutex in the fast-processing part, limit the perfermers affect to low level.
 	mutex.Lock()
 	for _, b := range body {
 		c := strings.ToLower(string(b))
